@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import './assets/scss/bootstrap/bootstrap.scss';
-import './App.scss';
 
 class App extends Component {
   render() {
