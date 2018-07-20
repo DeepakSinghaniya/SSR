@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import Typography from './components/typography-test-component/typography';
 
 class App extends Component {
   render() {
     return (
       <div className="carteckh">
-        <h1>Carteckh App</h1>
+        <Typography />
       </div>
     );
   }
