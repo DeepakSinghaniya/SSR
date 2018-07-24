@@ -1,0 +1,1 @@
+export {fatchUsers}  from './users';
