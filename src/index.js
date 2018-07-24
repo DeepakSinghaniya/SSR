@@ -1,17 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './store/store';
-import './assets/scss/bootstrap/bootstrap.scss';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 
-const renderIt = <Provider store={store}>
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
-</Provider>;
+import express from 'express';
+import renderer from './helpers/renderer';
 
-ReactDOM.render(renderIt, document.getElementById('root'));
-registerServiceWorker();
+
+const app = express();
+
+app.use(express.static('public'));
+
+app.set('port', process.env.PORT || 3000);
+
+app.get('/', function(req, res){
+     res.send(renderer(req));
+});
+
+app.listen(app.get('port'), function() {
+    console.log('server in listening on port: '+ app.get('port'));
+});
+
