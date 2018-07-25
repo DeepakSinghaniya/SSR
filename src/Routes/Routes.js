@@ -1,13 +1,23 @@
-import React, { Fragment } from 'react';
-import { Route } from 'react-router-dom';
-import Home from '../components/Home/Home';
-import Users from '../components/Users/Users';
+import HomePage from '../pages/Home/Home';
+import UsersPage from '../pages/Users/Users';
+import App from '../App';
 
-export default () => {
-    return (
-        <Fragment>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/users" component={Users} />
-        </Fragment>
-    );
-}
+export default [
+    {
+        ...App,
+        routes: [
+            {
+                ...HomePage,
+                path: '/',
+                exact: true
+            },
+            {
+                ...UsersPage,
+                path: '/users',
+                exact: true
+            }
+        ]
+    }
+
+];
+

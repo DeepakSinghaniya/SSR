@@ -35,5 +35,11 @@ const mapDispatchToProps = dispatch => {
     
 }
 
-export default connect(mapStoreToProps, mapDispatchToProps)(Users);
+const loadData = ( store) => {
+    return store.dispatch(fatchUsers());
+}
+
+const withRedux = connect(mapStoreToProps, mapDispatchToProps)(Users);
+
+export default {component: withRedux, loadData}
 

@@ -1,6 +1,4 @@
 import {FATCH_USERS} from '../actionsTypes';
-import axios from 'axios';
-
 
 export const getUsers = (data) => {
     return {
@@ -9,8 +7,8 @@ export const getUsers = (data) => {
     }
 }
 export const fatchUsers = () => {
-    return async (dispatch, getStore) => {
-        const res =  await axios.get('https://react-ssr-api.herokuapp.com/users');
+    return async (dispatch, getStore, api) => {
+        const res =  await api.get('/users');
         dispatch(getUsers(res));
     }
 }
