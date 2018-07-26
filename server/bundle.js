@@ -2,6 +2,12 @@
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
+/******/ 	// object to store loaded chunks
+/******/ 	// "0" means "already loaded"
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
@@ -26,6 +32,26 @@
 /******/ 		return module.exports;
 /******/ 	}
 /******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// require() chunk loading for javascript
+/******/
+/******/ 		// "0" is the signal for "already loaded"
+/******/ 		if(installedChunks[chunkId] !== 0) {
+/******/ 			var chunk = require("./" + chunkId + ".bundle.js");
+/******/ 			var moreModules = chunk.modules, chunkIds = chunk.ids;
+/******/ 			for(var moduleId in moreModules) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 			for(var i = 0; i < chunkIds.length; i++)
+/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 		}
+/******/ 		return Promise.all(promises);
+/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -79,6 +105,13 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/ 	// uncaught error handler for webpack runtime
+/******/ 	__webpack_require__.oe = function(err) {
+/******/ 		process.nextTick(function() {
+/******/ 			throw err; // catch this error by using import().catch()
+/******/ 		});
+/******/ 	};
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
@@ -106,7 +139,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\n\nvar _react = __webpack_require__(/*! react */ \"react\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nvar _reactRouterDom = __webpack_require__(/*! react-router-dom */ \"react-router-dom\");\n\nvar _reactRedux = __webpack_require__(/*! react-redux */ \"react-redux\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar header = function header(props) {\n    var authButton = props.auth ? _react2.default.createElement(\n        'a',\n        { href: '/api/logout' },\n        'Logout'\n    ) : _react2.default.createElement(\n        'a',\n        { href: '/api/auth/google' },\n        'Login'\n    );\n    return _react2.default.createElement(\n        'header',\n        { className: 'header' },\n        _react2.default.createElement(\n            _reactRouterDom.Link,\n            { to: '/' },\n            'SSR Stuff'\n        ),\n        _react2.default.createElement(\n            _reactRouterDom.Link,\n            { to: '/users' },\n            'Users'\n        ),\n        _react2.default.createElement(\n            _reactRouterDom.Link,\n            { to: '/admins' },\n            'Admin'\n        ),\n        authButton\n    );\n};\n\nvar mapStoreToProps = function mapStoreToProps(store) {\n    return {\n        auth: sotre.auth\n    };\n};\n\nexports.default = (0, _reactRedux.connect)()(header);\n\n//# sourceURL=webpack:///./src/components/Header/Header.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\n\nvar _react = __webpack_require__(/*! react */ \"react\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nvar _reactRouterDom = __webpack_require__(/*! react-router-dom */ \"react-router-dom\");\n\nvar _reactRedux = __webpack_require__(/*! react-redux */ \"react-redux\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar header = function header(props) {\n    var authButton = props.auth ? _react2.default.createElement(\n        'a',\n        { href: '/api/logout' },\n        'Logout'\n    ) : _react2.default.createElement(\n        'a',\n        { href: '/api/auth/google' },\n        'Login'\n    );\n    return _react2.default.createElement(\n        'header',\n        { className: 'header' },\n        _react2.default.createElement(\n            _reactRouterDom.Link,\n            { to: '/' },\n            'SSR Stuff'\n        ),\n        _react2.default.createElement(\n            _reactRouterDom.Link,\n            { to: '/users' },\n            'Users'\n        ),\n        _react2.default.createElement(\n            _reactRouterDom.Link,\n            { to: '/admins' },\n            'Admin'\n        ),\n        authButton\n    );\n};\n\nvar mapStoreToProps = function mapStoreToProps(store) {\n    return {\n        auth: store.auth\n    };\n};\n\nexports.default = (0, _reactRedux.connect)(mapStoreToProps)(header);\n\n//# sourceURL=webpack:///./src/components/Header/Header.js?");
 
 /***/ }),
 
@@ -142,7 +175,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\n__webpack_require__(/*! babel-polyfill */ \"babel-polyfill\");\n\nvar _express = __webpack_require__(/*! express */ \"express\");\n\nvar _express2 = _interopRequireDefault(_express);\n\nvar _expressHttpProxy = __webpack_require__(/*! express-http-proxy */ \"express-http-proxy\");\n\nvar _expressHttpProxy2 = _interopRequireDefault(_expressHttpProxy);\n\nvar _reactRouterConfig = __webpack_require__(/*! react-router-config */ \"react-router-config\");\n\nvar _renderer = __webpack_require__(/*! ./helpers/renderer */ \"./src/helpers/renderer.js\");\n\nvar _renderer2 = _interopRequireDefault(_renderer);\n\nvar _routes = __webpack_require__(/*! ./routes/routes */ \"./src/routes/routes.js\");\n\nvar _routes2 = _interopRequireDefault(_routes);\n\nvar _createStore = __webpack_require__(/*! ./helpers/createStore */ \"./src/helpers/createStore.js\");\n\nvar _createStore2 = _interopRequireDefault(_createStore);\n\nvar _dns = __webpack_require__(/*! dns */ \"dns\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar app = (0, _express2.default)();\n\napp.use('/api', (0, _expressHttpProxy2.default)('http://react-ssr-api.herokuapp.com', {\n    proxyReqOptDecorator: function proxyReqOptDecorator(opts) {\n        opts.headers['x-forwarded-host'] = ' 10.0.4.24';\n        return opts;\n    }\n}));\n\napp.use(_express2.default.static('public'));\n\napp.set('port', process.env.PORT || 3210);\n\napp.get('*', function (req, res) {\n    var store = (0, _createStore2.default)(req);\n\n    var matchRoute = (0, _reactRouterConfig.matchRoutes)(_routes2.default, req.path);\n    var promises = matchRoute.map(function (_ref) {\n        var route = _ref.route;\n\n        return route.loadData ? route.loadData(store) : null;\n    }).map(function (promise) {\n        if (promise) {\n            return new Promise(function (resolve, reject) {\n                promise.then(resolve).catch(resolve);\n            });\n        }\n    });\n\n    Promise.all(promises).then(function () {\n        var context = {};\n        var content = (0, _renderer2.default)(req, store, context);\n\n        if (context.url) {\n            return res.redirect(301, context.url);\n        }\n\n        if (context.notFound) {\n            res.status(404);\n        }\n        res.send(content);\n    });\n});\n\napp.listen(app.get('port'), function () {\n    console.log('server in listening on port: ' + app.get('port'));\n});\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("\n\n__webpack_require__(/*! babel-polyfill */ \"babel-polyfill\");\n\nvar _express = __webpack_require__(/*! express */ \"express\");\n\nvar _express2 = _interopRequireDefault(_express);\n\nvar _expressHttpProxy = __webpack_require__(/*! express-http-proxy */ \"express-http-proxy\");\n\nvar _expressHttpProxy2 = _interopRequireDefault(_expressHttpProxy);\n\nvar _reactRouterConfig = __webpack_require__(/*! react-router-config */ \"react-router-config\");\n\nvar _reactLoadable = __webpack_require__(/*! react-loadable */ \"react-loadable\");\n\nvar _reactLoadable2 = _interopRequireDefault(_reactLoadable);\n\nvar _renderer = __webpack_require__(/*! ./helpers/renderer */ \"./src/helpers/renderer.js\");\n\nvar _renderer2 = _interopRequireDefault(_renderer);\n\nvar _routes = __webpack_require__(/*! ./routes/routes */ \"./src/routes/routes.js\");\n\nvar _routes2 = _interopRequireDefault(_routes);\n\nvar _createStore = __webpack_require__(/*! ./helpers/createStore */ \"./src/helpers/createStore.js\");\n\nvar _createStore2 = _interopRequireDefault(_createStore);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar app = (0, _express2.default)();\n\napp.use('/api', (0, _expressHttpProxy2.default)('http://react-ssr-api.herokuapp.com', {\n    proxyReqOptDecorator: function proxyReqOptDecorator(opts) {\n        opts.headers['x-forwarded-host'] = ' 10.0.4.24';\n        return opts;\n    }\n}));\n\napp.use(_express2.default.static('public'));\n\napp.set('port', process.env.PORT || 3910);\n\napp.get('*', function (req, res) {\n    var store = (0, _createStore2.default)(req);\n\n    var matchRoute = (0, _reactRouterConfig.matchRoutes)(_routes2.default, req.path);\n    var promises = matchRoute.map(function (_ref) {\n        var route = _ref.route;\n\n        return route.loadData ? route.loadData(store) : null;\n    }).map(function (promise) {\n        if (promise) {\n            return new Promise(function (resolve, reject) {\n                promise.then(resolve).catch(resolve);\n            });\n        }\n        return null;\n    });\n\n    Promise.all(promises).then(function () {\n        var context = {};\n        var content = (0, _renderer2.default)(req, store, context);\n\n        if (context.url) {\n            return res.redirect(301, context.url);\n        }\n\n        if (context.notFound) {\n            res.status(404);\n        }\n        res.send(content);\n    });\n});\n\n_reactLoadable2.default.preloadAll().then(function () {\n\n    app.listen(app.get('port'), function () {\n        console.log('server in listening on port: ' + app.get('port'));\n    });\n});\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -166,7 +199,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\n\nvar _react = __webpack_require__(/*! react */ \"react\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar home = function home() {\n    return _react2.default.createElement(\n        'div',\n        null,\n        _react2.default.createElement(\n            'h1',\n            null,\n            'My home component sdfsd dsf dsf sdf sdf sd'\n        ),\n        _react2.default.createElement(\n            'button',\n            { onClick: function onClick() {\n                    console.log('button clicked!!');\n                } },\n            'Click me'\n        )\n    );\n};\n\nexports.default = { component: home };\n\n//# sourceURL=webpack:///./src/pages/Home/Home.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\n\nvar _react = __webpack_require__(/*! react */ \"react\");\n\nvar _react2 = _interopRequireDefault(_react);\n\nvar _reactLoadable = __webpack_require__(/*! react-loadable */ \"react-loadable\");\n\nvar _reactLoadable2 = _interopRequireDefault(_reactLoadable);\n\nvar _reactHelmet = __webpack_require__(/*! react-helmet */ \"react-helmet\");\n\nvar _reactHelmet2 = _interopRequireDefault(_reactHelmet);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar Loadin = function Loadin() {\n    return _react2.default.createElement(\n        'div',\n        null,\n        'Loading.OOOOOOOOOOOO'\n    );\n};\nvar HeaderLoadable = (0, _reactLoadable2.default)({\n    loader: function loader() {\n        return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.t.bind(null, /*! ../../components/Header1/Heaser1 */ \"./src/components/Header1/Heaser1.js\", 7));\n    },\n    loading: Loadin\n});\n\nvar home = function home() {\n    return _react2.default.createElement(\n        'div',\n        null,\n        _react2.default.createElement(\n            'h1',\n            null,\n            'My home component sdfsd dsf dsf sdf sdf sd'\n        ),\n        _react2.default.createElement(\n            'button',\n            { onClick: function onClick() {\n                    console.log('button clicked!!');\n                } },\n            'Click me'\n        ),\n        _react2.default.createElement(HeaderLoadable, null)\n    );\n};\n\nexports.default = { component: home };\n\n//# sourceURL=webpack:///./src/pages/Home/Home.js?");
 
 /***/ }),
 
@@ -190,7 +223,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\n\nvar _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };\n\nvar _Home = __webpack_require__(/*! ../pages/Home/Home */ \"./src/pages/Home/Home.js\");\n\nvar _Home2 = _interopRequireDefault(_Home);\n\nvar _Users = __webpack_require__(/*! ../pages/Users/Users */ \"./src/pages/Users/Users.js\");\n\nvar _Users2 = _interopRequireDefault(_Users);\n\nvar _ = __webpack_require__(/*! ../pages/404/404 */ \"./src/pages/404/404.js\");\n\nvar _2 = _interopRequireDefault(_);\n\nvar _App = __webpack_require__(/*! ../App */ \"./src/App.js\");\n\nvar _App2 = _interopRequireDefault(_App);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = [_extends({}, _App2.default, {\n    routes: [_extends({}, _Home2.default, {\n        path: '/',\n        exact: true\n    }), _extends({}, _Users2.default, {\n        path: '/users',\n        exact: true\n    }), _extends({}, _2.default)]\n})];\n\n//# sourceURL=webpack:///./src/routes/routes.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\n\nvar _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };\n\nvar _Home = __webpack_require__(/*! ../pages/Home/Home */ \"./src/pages/Home/Home.js\");\n\nvar _Home2 = _interopRequireDefault(_Home);\n\nvar _Users = __webpack_require__(/*! ../pages/Users/Users */ \"./src/pages/Users/Users.js\");\n\nvar _Users2 = _interopRequireDefault(_Users);\n\nvar _ = __webpack_require__(/*! ../pages/404/404 */ \"./src/pages/404/404.js\");\n\nvar _2 = _interopRequireDefault(_);\n\nvar _App = __webpack_require__(/*! ../App */ \"./src/App.js\");\n\nvar _App2 = _interopRequireDefault(_App);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = [_extends({}, _App2.default, {\n    routes: [_extends({}, _Home2.default, {\n        component: _Home2.default.component,\n        path: '/',\n        exact: true\n    }), _extends({}, _Users2.default, {\n        path: '/users',\n        exact: true\n    }), _extends({}, _2.default)]\n})];\n\n//# sourceURL=webpack:///./src/routes/routes.js?");
 
 /***/ }),
 
@@ -288,17 +321,6 @@ eval("module.exports = require(\"babel-polyfill\");\n\n//# sourceURL=webpack:///
 
 /***/ }),
 
-/***/ "dns":
-/*!**********************!*\
-  !*** external "dns" ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("module.exports = require(\"dns\");\n\n//# sourceURL=webpack:///external_%22dns%22?");
-
-/***/ }),
-
 /***/ "express":
 /*!**************************!*\
   !*** external "express" ***!
@@ -351,6 +373,17 @@ eval("module.exports = require(\"react-dom/server\");\n\n//# sourceURL=webpack:/
 /***/ (function(module, exports) {
 
 eval("module.exports = require(\"react-helmet\");\n\n//# sourceURL=webpack:///external_%22react-helmet%22?");
+
+/***/ }),
+
+/***/ "react-loadable":
+/*!*********************************!*\
+  !*** external "react-loadable" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"react-loadable\");\n\n//# sourceURL=webpack:///external_%22react-loadable%22?");
 
 /***/ }),
 

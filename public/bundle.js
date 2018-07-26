@@ -1,6 +1,50 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 	};
+/******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".bundle.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +70,65 @@
 /******/ 		return module.exports;
 /******/ 	}
 /******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// JSONP chunk loading for javascript
+/******/
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
+/******/
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[2]);
+/******/ 			} else {
+/******/ 				// setup Promise in chunk cache
+/******/ 				var promise = new Promise(function(resolve, reject) {
+/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
+/******/
+/******/ 				// start chunk loading
+/******/ 				var head = document.getElementsByTagName('head')[0];
+/******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
+/******/
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.src = jsonpScriptSrc(chunkId);
+/******/
+/******/ 				onScriptComplete = function (event) {
+/******/ 					// avoid mem leaks in IE.
+/******/ 					script.onerror = script.onload = null;
+/******/ 					clearTimeout(timeout);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 							var realSrc = event && event.target && event.target.src;
+/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.type = errorType;
+/******/ 							error.request = realSrc;
+/******/ 							chunk[1](error);
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
+/******/ 				head.appendChild(script);
+/******/ 			}
+/******/ 		}
+/******/ 		return Promise.all(promises);
+/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -78,6 +181,16 @@
 /******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+/******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
 /******/
 /******/
 /******/ 	// Load entry module and return exports
@@ -34436,6 +34549,350 @@ exports.warn = warn;
 
 /***/ }),
 
+/***/ "./node_modules/react-loadable/lib/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/react-loadable/lib/index.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var PropTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var ALL_INITIALIZERS = [];
+var READY_INITIALIZERS = [];
+
+function isWebpackReady(getModuleIds) {
+  if (( false ? undefined : _typeof(__webpack_require__.m)) !== 'object') {
+    return false;
+  }
+
+  return getModuleIds().every(function (moduleId) {
+    return typeof moduleId !== 'undefined' && typeof __webpack_require__.m[moduleId] !== 'undefined';
+  });
+}
+
+function load(loader) {
+  var promise = loader();
+
+  var state = {
+    loading: true,
+    loaded: null,
+    error: null
+  };
+
+  state.promise = promise.then(function (loaded) {
+    state.loading = false;
+    state.loaded = loaded;
+    return loaded;
+  }).catch(function (err) {
+    state.loading = false;
+    state.error = err;
+    throw err;
+  });
+
+  return state;
+}
+
+function loadMap(obj) {
+  var state = {
+    loading: false,
+    loaded: {},
+    error: null
+  };
+
+  var promises = [];
+
+  try {
+    Object.keys(obj).forEach(function (key) {
+      var result = load(obj[key]);
+
+      if (!result.loading) {
+        state.loaded[key] = result.loaded;
+        state.error = result.error;
+      } else {
+        state.loading = true;
+      }
+
+      promises.push(result.promise);
+
+      result.promise.then(function (res) {
+        state.loaded[key] = res;
+      }).catch(function (err) {
+        state.error = err;
+      });
+    });
+  } catch (err) {
+    state.error = err;
+  }
+
+  state.promise = Promise.all(promises).then(function (res) {
+    state.loading = false;
+    return res;
+  }).catch(function (err) {
+    state.loading = false;
+    throw err;
+  });
+
+  return state;
+}
+
+function resolve(obj) {
+  return obj && obj.__esModule ? obj.default : obj;
+}
+
+function render(loaded, props) {
+  return React.createElement(resolve(loaded), props);
+}
+
+function createLoadableComponent(loadFn, options) {
+  var _class, _temp;
+
+  if (!options.loading) {
+    throw new Error('react-loadable requires a `loading` component');
+  }
+
+  var opts = Object.assign({
+    loader: null,
+    loading: null,
+    delay: 200,
+    timeout: null,
+    render: render,
+    webpack: null,
+    modules: null
+  }, options);
+
+  var res = null;
+
+  function init() {
+    if (!res) {
+      res = loadFn(opts.loader);
+    }
+    return res.promise;
+  }
+
+  ALL_INITIALIZERS.push(init);
+
+  if (typeof opts.webpack === 'function') {
+    READY_INITIALIZERS.push(function () {
+      if (isWebpackReady(opts.webpack)) {
+        return init();
+      }
+    });
+  }
+
+  return _temp = _class = function (_React$Component) {
+    _inherits(LoadableComponent, _React$Component);
+
+    function LoadableComponent(props) {
+      _classCallCheck(this, LoadableComponent);
+
+      var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+
+      _this.retry = function () {
+        _this.setState({ error: null, loading: true });
+        res = loadFn(opts.loader);
+        _this._loadModule();
+      };
+
+      init();
+
+      _this.state = {
+        error: res.error,
+        pastDelay: false,
+        timedOut: false,
+        loading: res.loading,
+        loaded: res.loaded
+      };
+      return _this;
+    }
+
+    LoadableComponent.preload = function preload() {
+      return init();
+    };
+
+    LoadableComponent.prototype.componentWillMount = function componentWillMount() {
+      this._mounted = true;
+      this._loadModule();
+    };
+
+    LoadableComponent.prototype._loadModule = function _loadModule() {
+      var _this2 = this;
+
+      if (this.context.loadable && Array.isArray(opts.modules)) {
+        opts.modules.forEach(function (moduleName) {
+          _this2.context.loadable.report(moduleName);
+        });
+      }
+
+      if (!res.loading) {
+        return;
+      }
+
+      if (typeof opts.delay === 'number') {
+        if (opts.delay === 0) {
+          this.setState({ pastDelay: true });
+        } else {
+          this._delay = setTimeout(function () {
+            _this2.setState({ pastDelay: true });
+          }, opts.delay);
+        }
+      }
+
+      if (typeof opts.timeout === 'number') {
+        this._timeout = setTimeout(function () {
+          _this2.setState({ timedOut: true });
+        }, opts.timeout);
+      }
+
+      var update = function update() {
+        if (!_this2._mounted) {
+          return;
+        }
+
+        _this2.setState({
+          error: res.error,
+          loaded: res.loaded,
+          loading: res.loading
+        });
+
+        _this2._clearTimeouts();
+      };
+
+      res.promise.then(function () {
+        update();
+      }).catch(function (err) {
+        update();
+      });
+    };
+
+    LoadableComponent.prototype.componentWillUnmount = function componentWillUnmount() {
+      this._mounted = false;
+      this._clearTimeouts();
+    };
+
+    LoadableComponent.prototype._clearTimeouts = function _clearTimeouts() {
+      clearTimeout(this._delay);
+      clearTimeout(this._timeout);
+    };
+
+    LoadableComponent.prototype.render = function render() {
+      if (this.state.loading || this.state.error) {
+        return React.createElement(opts.loading, {
+          isLoading: this.state.loading,
+          pastDelay: this.state.pastDelay,
+          timedOut: this.state.timedOut,
+          error: this.state.error,
+          retry: this.retry
+        });
+      } else if (this.state.loaded) {
+        return opts.render(this.state.loaded, this.props);
+      } else {
+        return null;
+      }
+    };
+
+    return LoadableComponent;
+  }(React.Component), _class.contextTypes = {
+    loadable: PropTypes.shape({
+      report: PropTypes.func.isRequired
+    })
+  }, _temp;
+}
+
+function Loadable(opts) {
+  return createLoadableComponent(load, opts);
+}
+
+function LoadableMap(opts) {
+  if (typeof opts.render !== 'function') {
+    throw new Error('LoadableMap requires a `render(loaded, props)` function');
+  }
+
+  return createLoadableComponent(loadMap, opts);
+}
+
+Loadable.Map = LoadableMap;
+
+var Capture = function (_React$Component2) {
+  _inherits(Capture, _React$Component2);
+
+  function Capture() {
+    _classCallCheck(this, Capture);
+
+    return _possibleConstructorReturn(this, _React$Component2.apply(this, arguments));
+  }
+
+  Capture.prototype.getChildContext = function getChildContext() {
+    return {
+      loadable: {
+        report: this.props.report
+      }
+    };
+  };
+
+  Capture.prototype.render = function render() {
+    return React.Children.only(this.props.children);
+  };
+
+  return Capture;
+}(React.Component);
+
+Capture.propTypes = {
+  report: PropTypes.func.isRequired
+};
+Capture.childContextTypes = {
+  loadable: PropTypes.shape({
+    report: PropTypes.func.isRequired
+  }).isRequired
+};
+
+
+Loadable.Capture = Capture;
+
+function flushInitializers(initializers) {
+  var promises = [];
+
+  while (initializers.length) {
+    var init = initializers.pop();
+    promises.push(init());
+  }
+
+  return Promise.all(promises).then(function () {
+    if (initializers.length) {
+      return flushInitializers(initializers);
+    }
+  });
+}
+
+Loadable.preloadAll = function () {
+  return new Promise(function (resolve, reject) {
+    flushInitializers(ALL_INITIALIZERS).then(resolve, reject);
+  });
+};
+
+Loadable.preloadReady = function () {
+  return new Promise(function (resolve, reject) {
+    // We always will resolve, errors should be handled within loading UIs.
+    flushInitializers(READY_INITIALIZERS).then(resolve, resolve);
+  });
+};
+
+module.exports = Loadable;
+
+/***/ }),
+
 /***/ "./node_modules/react-redux/es/components/Provider.js":
 /*!************************************************************!*\
   !*** ./node_modules/react-redux/es/components/Provider.js ***!
@@ -41043,6 +41500,10 @@ var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _reactLoadable = __webpack_require__(/*! react-loadable */ "./node_modules/react-loadable/lib/index.js");
+
+var _reactLoadable2 = _interopRequireDefault(_reactLoadable);
+
 var _routes = __webpack_require__(/*! ../routes/routes */ "./src/routes/routes.js");
 
 var _routes2 = _interopRequireDefault(_routes);
@@ -41059,15 +41520,17 @@ var axiosInstance = _axios2.default.create({
 });
 var store = (0, _redux.createStore)(_reducers2.default, window.INITIAL_STATE, composeEnhancers((0, _redux.applyMiddleware)(_reduxThunk2.default.withExtraArgument(axiosInstance))));
 
-_reactDom2.default.hydrate(_react2.default.createElement(
-    _reactRedux.Provider,
-    { store: store },
-    _react2.default.createElement(
-        _reactRouterDom.BrowserRouter,
-        null,
-        (0, _reactRouterConfig.renderRoutes)(_routes2.default)
-    )
-), document.querySelector('#root'));
+_reactLoadable2.default.preloadAll().then(function () {
+    _reactDom2.default.hydrate(_react2.default.createElement(
+        _reactRedux.Provider,
+        { store: store },
+        _react2.default.createElement(
+            _reactRouterDom.BrowserRouter,
+            null,
+            (0, _reactRouterConfig.renderRoutes)(_routes2.default)
+        )
+    ), document.querySelector('#root'));
+});
 
 /***/ }),
 
@@ -41129,11 +41592,11 @@ var header = function header(props) {
 
 var mapStoreToProps = function mapStoreToProps(store) {
     return {
-        auth: sotre.auth
+        auth: store.auth
     };
 };
 
-exports.default = (0, _reactRedux.connect)()(header);
+exports.default = (0, _reactRedux.connect)(mapStoreToProps)(header);
 
 /***/ }),
 
@@ -41195,7 +41658,29 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactLoadable = __webpack_require__(/*! react-loadable */ "./node_modules/react-loadable/lib/index.js");
+
+var _reactLoadable2 = _interopRequireDefault(_reactLoadable);
+
+var _reactHelmet = __webpack_require__(/*! react-helmet */ "./node_modules/react-helmet/lib/Helmet.js");
+
+var _reactHelmet2 = _interopRequireDefault(_reactHelmet);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Loadin = function Loadin() {
+    return _react2.default.createElement(
+        'div',
+        null,
+        'Loading.OOOOOOOOOOOO'
+    );
+};
+var HeaderLoadable = (0, _reactLoadable2.default)({
+    loader: function loader() {
+        return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.t.bind(null, /*! ../../components/Header1/Heaser1 */ "./src/components/Header1/Heaser1.js", 7));
+    },
+    loading: Loadin
+});
 
 var home = function home() {
     return _react2.default.createElement(
@@ -41212,7 +41697,8 @@ var home = function home() {
                     console.log('button clicked!!');
                 } },
             'Click me'
-        )
+        ),
+        _react2.default.createElement(HeaderLoadable, null)
     );
 };
 
@@ -41365,6 +41851,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = [_extends({}, _App2.default, {
     routes: [_extends({}, _Home2.default, {
+        component: _Home2.default.component,
         path: '/',
         exact: true
     }), _extends({}, _Users2.default, {

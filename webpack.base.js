@@ -1,6 +1,24 @@
+const path = require('path');
+const eslintFormatter = require('react-dev-utils/eslintFormatter');
+
 module.exports = {
     module: {
         rules: [
+            {
+                test: /\.(js|jsx|mjs)$/,
+                enforce: 'pre',
+                use: [
+                  {
+                    options: {
+                      formatter: eslintFormatter,
+                      eslintPath: path.resolve(__dirname, 'node_modules/eslint' ), //require.resolve('eslint'),
+                      
+                    },
+                    loader: path.resolve(__dirname, 'node_modules/eslint-loader/' ), //require.resolve('eslint-loader'),
+                  },
+                ],
+                include: path.resolve(__dirname, 'src'),
+              },
             {
                 test: /\.js?$/,
                 loader: 'babel-loader',

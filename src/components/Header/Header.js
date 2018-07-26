@@ -18,8 +18,8 @@ const header = (props) => {
 
 const mapStoreToProps = store => {
     return {
-        auth: sotre.auth
+        auth: store.auth
     }
 }
 
-export default connect()(header);
+export default connect(mapStoreToProps)(header);

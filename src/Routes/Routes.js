@@ -9,6 +9,7 @@ export default [
         routes: [
             {
                 ...HomePage,
+                component: HomePage.component,
                 path: '/',
                 exact: true
             },
