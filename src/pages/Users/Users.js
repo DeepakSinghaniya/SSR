@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { Helmet } from 'react-helmet';
 import { fatchUsers } from '../../store/actions';
 
 class Users extends Component {
@@ -11,6 +11,9 @@ class Users extends Component {
     render() {
         return (
             <div>
+                <Helmet>
+                    <title>Users Page </title>
+                </Helmet>
                 <h1>Here is the logn user list.</h1>
                 <ul>
                     {this.props.users.map(user => {

@@ -1,1 +1,2 @@
 export const FATCH_USERS = 'FATCH_USERS';
+export const FATCH_CURRENT_USER = 'FATCH_CURRENT_USER';

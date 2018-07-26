@@ -1,1 +1,1 @@
-export {fatchUsers}  from './users';
+export {fatchUsers, fatchCurrentUser}  from './users';

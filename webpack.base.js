@@ -1,4 +1,4 @@
- module.exports = {
+module.exports = {
     module: {
         rules: [
             {
@@ -19,8 +19,8 @@
                                 ]
                             }
                         }]
-                    ]
-                }
+                    ],
+                },
             }
         ]
     }

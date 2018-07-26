@@ -5,6 +5,7 @@ import { matchRoutes } from 'react-router-config';
 import renderer from './helpers/renderer';
 import routes from './routes/routes';
 import createReduxStore from './helpers/createStore';
+import { resolve } from 'dns';
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(
     '/api',
     proxy('http://react-ssr-api.herokuapp.com', {
         proxyReqOptDecorator(opts) {
-            opts.headers['x-forwarded-host'] = ' 10.0.4.24:3210';
+            opts.headers['x-forwarded-host'] = ' 10.0.4.24';
             return opts;
         }
     })  
@@ -28,9 +29,26 @@ app.get('*', function (req, res) {
     const matchRoute = matchRoutes(routes, req.path);
     const promises = matchRoute.map(({ route }) => {
         return route.loadData ? route.loadData(store) : null;
+    }).map(promise => {
+        if(promise) {
+            return new Promise((resolve, reject) => {
+                promise.then(resolve).catch(resolve);
+            });
+        }
     });
+
     Promise.all(promises).then(() => {
-        res.send(renderer(req, store));
+        const context = {};
+        const content = renderer(req, store, context);
+
+        if(context.url) {
+            return res.redirect(301, context.url);
+        }
+
+        if(context.notFound) {
+            res.status(404);
+        }
+        res.send(content);
     });
 
 });

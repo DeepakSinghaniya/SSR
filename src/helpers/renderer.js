@@ -4,23 +4,29 @@ import { StaticRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
-
+import { Helmet } from 'react-helmet';
 import routes from '../routes/routes';
 
-const renderer = (req, store) => {
+const renderer = (req, store, context) => {
     const content = renderToString(
         <Provider store={store}>
-            <StaticRouter location={req.path} context={{}}>
+            <StaticRouter location={req.path} context={{ context }}>
                 {renderRoutes(routes)}
             </StaticRouter>
         </Provider>);
+    const helmet = Helmet.renderStatic();
+
     return `<html>
     <head>
+    ${helmet.title.toString()}
+        ${helmet.meta.toString()}
     </head>
     <body>
         <div id="root">${content}</div>
         <script>
+        /* <![CDATA[ */
         window.INITIAL_STATE = ${serialize(store.getState())}
+        /* ]]> */
         </script>
         <script src="bundle.js"></script>
     </body>

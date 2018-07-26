@@ -4,6 +4,7 @@ const baseConfig = require('./webpack.base.js');
 
 
 const config = {
+    devtool: 'cheap-module-source-map',
     mode: 'development',
     entry: './src/client/client.js',
     output: {

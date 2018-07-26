@@ -1,15 +1,19 @@
 import React from 'react';
 import { renderRoutes } from 'react-router-config';
+import Header from './components/Header/Header';
+import {fatchCurrentUser} from './store/actions';
+
 
 const App = ({route}) => {
     return (
         <div>
-        <h1>Site Header</h1>
+        <Header />
         {renderRoutes(route.routes)}
         </div>
     );
 }
 
 export default {
-    component: App
+    component: App,
+    loadData: ({dispatch})=> dispatch(fatchCurrentUser())
 };
