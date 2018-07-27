@@ -8,17 +8,17 @@ module.exports = {
                 test: /\.(js|jsx|mjs)$/,
                 enforce: 'pre',
                 use: [
-                  {
-                    options: {
-                      formatter: eslintFormatter,
-                      eslintPath: path.resolve(__dirname, 'node_modules/eslint' ), //require.resolve('eslint'),
-                      
+                    {
+                        options: {
+                            formatter: eslintFormatter,
+                            eslintPath: 'eslint',
+
+                        },
+                        loader: 'eslint-loader',
                     },
-                    loader: path.resolve(__dirname, 'node_modules/eslint-loader/' ), //require.resolve('eslint-loader'),
-                  },
                 ],
-                include: path.resolve(__dirname, 'src'),
-              },
+                include: path.resolve(__dirname, 'src/'),
+            },
             {
                 test: /\.js?$/,
                 loader: 'babel-loader',

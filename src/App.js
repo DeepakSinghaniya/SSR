@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import {fatchCurrentUser} from './store/actions';
 
 
+
 const App = ({route}) => {
     return (
         <div>

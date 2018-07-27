@@ -36,7 +36,8 @@ app.get('*', function (req, res) {
             }));
         }
         return null;
-    });
+    }).filter(item => item !== null);
+
 
     Promise.all(promises).then(() => {
         const context = {};
