@@ -1,5 +1,7 @@
 const path = require('path');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
+const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugin;
+
 
 module.exports = {
     module: {
@@ -62,5 +64,10 @@ module.exports = {
             }
 
         ]
-    }
+    },
+    "plugins": [
+        new ReactLoadablePlugin({
+            filename: path.join(__dirname, '/../../dist/react-loadable.json'),
+          }),
+    ]
 }

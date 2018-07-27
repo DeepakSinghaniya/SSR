@@ -41520,7 +41520,7 @@ var axiosInstance = _axios2.default.create({
 });
 var store = (0, _redux.createStore)(_reducers2.default, window.INITIAL_STATE, composeEnhancers((0, _redux.applyMiddleware)(_reduxThunk2.default.withExtraArgument(axiosInstance))));
 
-_reactLoadable2.default.preloadAll().then(function () {
+_reactLoadable2.default.preloadReady().then(function () {
     _reactDom2.default.hydrate(_react2.default.createElement(
         _reactRedux.Provider,
         { store: store },
@@ -41678,6 +41678,10 @@ var Loadin = function Loadin() {
 var HeaderLoadable = (0, _reactLoadable2.default)({
     loader: function loader() {
         return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.t.bind(null, /*! ../../components/Header1/Heaser1 */ "./src/components/Header1/Heaser1.js", 7));
+    },
+    modules: ['../../components/Header1/Heaser1'],
+    webpack: function webpack() {
+        return [/*require.resolve*/(/*! ../../components/Header1/Heaser1 */ "./src/components/Header1/Heaser1.js")];
     },
     loading: Loadin
 });

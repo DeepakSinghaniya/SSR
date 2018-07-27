@@ -18,7 +18,7 @@ const axiosInstance = axios.create({
 });
 const store = createStore(reducer, window.INITIAL_STATE, composeEnhancers(applyMiddleware(thunk.withExtraArgument(axiosInstance))));
 
-Loadable.preloadAll().then(() => {
+Loadable.preloadReady().then(() => {
     ReactDOM.hydrate(
         <Provider store={store}>
             <BrowserRouter>

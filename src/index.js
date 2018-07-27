@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import express from 'express';
 import proxy from 'express-http-proxy';
 import { matchRoutes } from 'react-router-config';
-import Loadable from 'react-loadable';
+import Loadable from 'react-loadable'; 
 import renderer from './helpers/renderer';
 import routes from './routes/routes';
 import createReduxStore from './helpers/createStore';
